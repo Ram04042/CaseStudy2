@@ -1,0 +1,166 @@
+<html>
+	<head>
+		<style>
+			label,input
+			{
+				margin:10px;
+				font-size:20px;
+			}
+			
+			input
+			{
+				font-size:17px;
+				padding:5px 10px;;
+				
+			}
+				
+			
+			.container
+			{
+				padding:20px;
+				width:60%; 
+				border:1px solid black;
+				
+			}
+			
+			span
+			{
+				font-size:17px;
+			}
+			
+			button
+			{
+				padding: 5px 10px;
+				margin:15px 0px;
+				font-size:17px;
+			}
+			
+			#msgdiv
+			{
+				font-weight:bold;
+				color:red;
+			}
+		</style>
+		
+	</head>
+	<body>
+		<center> <h1> Student Login Form </h1> </center>
+			<center>
+			<form>			
+				<div class="container">
+					<div id="msgdiv"></div>
+					<label>Username : </label>
+					<input type="text" id="username" required>
+					<br>
+					<label>Password : </label>
+					<input type="password" id="password" required> <br>
+					<input type="checkbox" id="remcheck"> <span> Remember me<span><br>
+					<input type="button" onclick="validate()" value="Login">
+					<br>
+				</div>
+			</form>
+		</center>
+
+	
+	</body>
+	
+	<script src="md5.js"></script>
+	<script>
+	
+	document.onload = checkcookie();
+	
+	function checkcookie()
+	{
+		console.log("inside");
+	
+		var cookieVar =  document.cookie.split(";");
+		var usernamehashCookie,passwordhashCookie,usernameCookie;
+		var userindex,passindex,userindex;
+		
+		for(var i = 0; i < cookieVar.length; i++) 
+		{
+			var c = cookieVar[i];
+			userindex = c.indexOf("usernamehash");
+			if(userindex!=-1)
+			{
+				usernamehashCookie = c.substring(userindex+13, c.length);
+			}			
+			usernameindex = c.indexOf("uname");
+			if(usernameindex!=-1)
+			{
+				usernameCookie = c.substring(usernameindex+6, c.length);
+			}			
+			passindex = c.indexOf("passwordhash")
+			if(passindex!=-1)
+			{
+				passwordhashCookie = c.substring(passindex+13, c.length);
+			}
+			
+		}
+		
+		
+		console.log(userindex);
+		
+		if(usernamehashCookie!="" && passwordhashCookie!="")
+		{			
+		
+			// Store a selector(i.e. Unique Userid) to lookup on database
+			// And check the username and password of hash values stored in database with the hash values stored in cookies
+			
+			if(usernamehashCookie == CryptoJS.MD5("LTI").toString() && passwordhashCookie ==CryptoJS.MD5("123").toString())  
+			{
+				window.location.href = "welcome.html?uname="+usernameCookie;
+			}
+		}			
+	
+	}
+	
+	
+	
+	function validate()
+	{
+		
+		//document.cookie = "username="+uname+"; password="+pass+"; max-age=" + 24*60*60;
+		//document.cookie = "username=John Doe";
+
+		var uname = document.getElementById("username").value;
+		var pass  = document.getElementById("password").value;
+		
+		var unamehash = CryptoJS.MD5(uname).toString();
+		var passhash = CryptoJS.MD5(pass).toString();
+		
+		
+		if(uname == "LTI" && pass=="123")
+		{
+			
+			var rememberBox = document.getElementById("remcheck");
+			if(rememberBox.checked)
+			{
+				document.cookie = "usernamehash="+unamehash+"; max-age=" + 24*60*60;
+				document.cookie = "passwordhash="+passhash+"; max-age=" + 24*60*60;
+				document.cookie = "uname="+uname+"; max-age=" + 24*60*60;			
+			}
+			else
+			{
+				sessionStorage.setItem("username",uname);
+			}
+			
+			console.log(document.cookie);
+			window.location.href = "welcome.html?uname="+uname;
+			
+		}
+		else
+		{
+			document.getElementById("msgdiv").innerHTML = "Invalid Username/Password. Try Again!";
+		}
+		
+			
+		
+		
+
+		
+	}
+	</script>
+	
+	
+</html>

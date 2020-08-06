@@ -1,0 +1,95 @@
+<html>
+
+<head>
+	<style>
+	
+	
+	
+	
+	</style>
+</head>
+
+<body>
+	<h1 align="center" id="name">Welcome Back, </h1>
+</body>
+<script>
+//	var url_string = window.location.href;
+//	var url = new URL(url_string);
+//	var user = url.searchParams.get("uname");
+	
+//	document.getElementById("name").innerHTML+=user;
+</script>
+<script src="md5.js"></script>
+	<script>
+	document.onload = checkcookieandsession();
+	
+	function checkcookieandsession()
+	{
+		if(checkcookie()!="")
+		{
+			document.getElementById("name").innerHTML+=checkcookie();
+		}
+		else if(sessionStorage.getItem("username")!=null)
+		{
+			document.getElementById("name").innerHTML+=sessionStorage.getItem("username");
+		}
+		else
+		{
+			window.location.href = "index.html";
+		}
+	}
+	document.onload = checkcookie();
+	
+	function checkcookie()
+	{
+		console.log("inside");
+	
+		var cookieVar =  document.cookie.split(";");
+		var usernamehashCookie,passwordhashCookie,usernameCookie;
+		var userindex,passindex,userindex;
+		
+		for(var i = 0; i < cookieVar.length; i++) 
+		{
+			var c = cookieVar[i];
+			userindex = c.indexOf("usernamehash");
+			if(userindex!=-1)
+			{
+				usernamehashCookie = c.substring(userindex+13, c.length);
+			}			
+			usernameindex = c.indexOf("uname");
+			if(usernameindex!=-1)
+			{
+				usernameCookie = c.substring(usernameindex+6, c.length);
+			}			
+			passindex = c.indexOf("passwordhash")
+			if(passindex!=-1)
+			{
+				passwordhashCookie = c.substring(passindex+13, c.length);
+			}
+			
+		}
+		
+		
+		console.log(userindex);
+		
+		if(usernamehashCookie!="" && passwordhashCookie!="")
+		{			
+		
+			// Store a selector(i.e. Unique Userid) to lookup on database
+			// And check the username and password of hash values stored in database with the hash values stored in cookies
+			
+			if(usernamehashCookie == CryptoJS.MD5("LTI").toString() && passwordhashCookie ==CryptoJS.MD5("123").toString())  
+			{
+				return usernameCookie;
+			}
+			else
+			{
+				return "";			
+			}
+		}			
+	
+	}
+	
+	</script>
+	
+</html>
